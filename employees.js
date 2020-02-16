@@ -11,6 +11,7 @@ var connection = mysql.createConnection({
 
 connection.connect(function(err) {
     if (err) throw err;
+    console.log("Connected as ID: " + connection.threadId);
     runSearch();
 });
 
@@ -33,6 +34,10 @@ function runSearch() {
         })
         .then(function(answer) {
             switch (answer.action) {
+            case "View All Employees":
+                employeeSearch();
+                break;
+
             case "View Employees by Department":
                 employeeByDeptSearch();
                 break;
@@ -61,6 +66,17 @@ function runSearch() {
                 connection.end();
                 break;
             }
-        })
-
+        });
 }
+
+function employeeSearch() {
+    connection.query("SELECT * FROM employee", function(err, res) {
+        if (err) throw err;
+        for (var i = 0; i < res.length; i++) {
+            console.log(res[i].id + " | " + res[i].employee + " | " + res[i].department + " | " + res[i].role);
+        }
+        console.log("-----------------------------------");
+    });
+}
+
+

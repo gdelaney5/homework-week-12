@@ -79,4 +79,21 @@ function employeeSearch() {
     });
 }
 
-
+function employeeByDeptSearch() {
+    inquirer
+        .prompt({
+            name: "employee",
+            type: "input",
+            message: "What Department would you like to search?"
+        })
+        .then(function(answer) {
+            var query = "SELECT employee FROM department WHERE ?";
+            connection.query(query, { department: answer.department }, function(err, res) {
+                if (err) throw err;
+                for (var i = 0; i < res.length; i++) {
+                    console.log("Employee: " + res[i].employee + " || Department: " + res[i].department + " || Role: " + res[i].role);
+                }
+                runSearch();
+            });
+        });
+}
